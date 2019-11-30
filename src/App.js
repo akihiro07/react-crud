@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 
+// [参考][json-server]https://app.codegrid.net/entry/2017-json-server-1
 class App extends Component {
   constructor() {
     super()
     this.state = {
       tasks: []
     }
-    // [参考]https://qiita.com/cubdesign/items/ee8bff7073ebe1979936
-    // [MEMO]`onChange={ ()=>{ this.changeText() } }`と書けばconstructor内でバインド不要（上記URL参考）
-    this.changeText = this.changeText.bind(this)
-    this.submitTask = this.submitTask.bind(this)
     this.fetchTasks = this.fetchTasks.bind(this)
   }
 
@@ -37,7 +34,6 @@ class App extends Component {
   changeText(e) {
     const inputText = e.target.value
     this.setState({ inputText: inputText })
-    console.dir(inputText);
   }
 
   // 入力した値
@@ -48,11 +44,12 @@ class App extends Component {
       headers: {
         // https://wa3.i-3-i.info/word15819.html
         "Accept": "application/json",
-        "Content-Type": "application/json" // いる？
+        "Content-Type": "application/json"
       },
-      // JSON形式に変換
+      // JSON形式に変換(db.jsonへ)
       body: JSON.stringify({ body: this.state.inputText })
     })
+    // データを取得する関数呼び出し
     .then( this.fetchTasks )
   }
 
@@ -86,6 +83,7 @@ class App extends Component {
               return (
                 <div className="task" key={ task.id }>
                   { task.body }
+                  {/* [参考]https://qiita.com/cubdesign/items/ee8bff7073ebe1979936 */}
                   <button className="put" onClick={ () => {this.putTask(task.id)} }>PUT</button>
                   <button className="delete" onClick={ () => {this.deleteTask(task.id)} }>DELETE</button>
                 </div>
@@ -97,9 +95,9 @@ class App extends Component {
         <div id="task-form">
           <label>{/* forは使用しない？ */}
             <p>↓追加してねっ↓</p>
-            <input type="text" id="task-input" onChange={ this.changeText }/>
+            <input type="text" id="task-input" onChange={ (e) => {this.changeText(e)} }/>
           </label>
-          <button id="submit" onClick={ this.submitTask }>submit</button>
+          <button id="submit" onClick={ () => {this.submitTask()} }>submit</button>
         </div>
       </div>
     );
