@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import './App.css';
+//import classNames from 'classnames'
+import '../App.scss';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import backgroundImage from '../image/background-img.png'
+
 
 // [参考][json-server]https://app.codegrid.net/entry/2017-json-server-1
 class App extends Component {
@@ -37,7 +44,8 @@ class App extends Component {
   }
 
   // 入力した値
-  submitTask() {
+  submitTask(e) {
+    document.form.taskFormInput.value="";
     // [参考]https://qiita.com/koheiyamaguchi0203/items/5777c4653a01ae4c7b06
     fetch("http://localhost:3001/tasks", {
       method: "POST",
@@ -47,21 +55,21 @@ class App extends Component {
         "Content-Type": "application/json"
       },
       // JSON形式に変換(db.jsonへ)
-      body: JSON.stringify({ body: this.state.inputText })
+      body: JSON.stringify({ todoText: this.state.inputText, isDone: false} )
     })
     // データを取得する関数呼び出し
     .then( this.fetchTasks )
   }
 
   // データ更新
-  putTask(taskId) {
+  doneTask(taskId) {
     fetch("http://localhost:3001/tasks/"+taskId, {
       method: "PUT",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ body: "DONE！！" })
+      body: JSON.stringify({ todoText: "DONE!!"} )
     })
     .then( this.fetchTasks )
   }
@@ -73,32 +81,38 @@ class App extends Component {
     })
     .then( this.fetchTasks )
   }
-
   render() {
     return (
-      <div className="App">
-        <div className="tasks">
-          {
-            this.state.tasks.map( task => {
-              return (
-                <div className="task" key={ task.id }>
-                  { task.body }
-                  {/* [参考]https://qiita.com/cubdesign/items/ee8bff7073ebe1979936 */}
-                  <button className="put" onClick={ () => {this.putTask(task.id)} }>PUT</button>
-                  <button className="delete" onClick={ () => {this.deleteTask(task.id)} }>DELETE</button>
-                </div>
-              )
-            })
-          }
+      <div id="app">
+
+        <img className="background-image" src={backgroundImage}  alt="猫の画像" />
+        <div className="title">
+          <span className="title__text">TASK MANAGER</span>
         </div>
-        {/* formの書き方 */}
-        <div id="task-form">
-          <label>{/* forは使用しない？ */}
+        <main id="main">
+          <div className="tasks">
+            {
+              this.state.tasks.map( task => {
+                return (
+                  <div className="task" key={ task.id }>
+                    {/* [参考]https://qiita.com/cubdesign/items/ee8bff7073ebe1979936 */}
+                    <FormControlLabel className="task__done" control={<Checkbox value="checkedC" />} onClick={ () => {this.doneTask(task.id)} } />
+                    <span className="task__text">{ task.todoText }</span>
+                    <Button className="task__delete" variant="contained" color="default" startIcon={<DeleteIcon />} onClick={ () => {this.deleteTask(task.id)} }>DELETE</Button>
+                  </div>
+                )
+              })
+            }
+          </div>
+          {/* formの書き方 */}
+          <form name="form" id="task-form">
             <p>↓追加してねっ↓</p>
-            <input type="text" id="task-input" onChange={ (e) => {this.changeText(e)} }/>
-          </label>
-          <button id="submit" onClick={ () => {this.submitTask()} }>submit</button>
-        </div>
+            <label className="task-form__label">{/* forは使用しない？ */}
+              <input type="text" className="task-form__input" name="taskFormInput" onChange={ (e) => {this.changeText(e)} }/>
+            </label>
+            <Button variant="contained" color="primary" className="task-form__submit" onClick={ (e) => {this.submitTask(e)} }>submit</Button>
+          </form>
+        </main>
       </div>
     );
   }
