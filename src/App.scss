@@ -1,0 +1,69 @@
+#app {
+  position: relative;
+  text-align: center;
+}
+
+// 画像部分
+.background-image {
+  // https://coliss.com/articles/build-websites/operation/css/viewport-vs-percentage-units-by-ire.html
+  bottom: 5%;
+  position: absolute;
+  right: 5%;
+}
+
+// header部分
+.title {
+  align-items: center;
+  background:#bcaaa4;
+  color: #ffffff;
+  display: flex;
+  font-size: 1.6rem;
+  font-weight: bold;
+  height: 10vh;
+  margin-bottom: 2%;
+
+  &__text {
+    padding: 0 20px;
+  }
+}
+
+// main部分
+#main {
+  width: 50%;
+  margin: 0 auto;
+}
+
+// main > task部分
+.task {
+  margin-bottom: 1%;
+}
+.task__done {
+  margin-right: 0 !important;
+}
+.task__text {
+  display: inline-block;
+  margin: 0 3%;
+  text-align: left;
+  width: 40%;
+}
+
+
+// main > form部分
+#task-form {
+  bottom: 10%;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.task-form__label {
+  display: block;
+  margin-bottom: 1%;
+}
+.task-form__input {
+  border: none;
+  font-size: 18px;
+  height: 2vh;
+  padding: 1.5vh 1.5%;
+  width: 25%;
+}
